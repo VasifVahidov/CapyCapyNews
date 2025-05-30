@@ -8,7 +8,7 @@ const articles = [
       en: "Germany debates new climate targets",
       de: "Deutschland streitet über neue Klimaziele"
     },
-    bias: "center"
+    bias: "center-left"
   },
   {
     id: 2,
@@ -19,7 +19,7 @@ const articles = [
       en: "Minimum wage reform sparks protests",
       de: "Mindestlohnreform löst Proteste aus"
     },
-    bias: "left"
+    bias: "far-left"
   },
   {
     id: 3,
@@ -30,6 +30,17 @@ const articles = [
       en: "Migration law faces strong opposition",
       de: "Migrationsgesetz stößt auf heftigen Widerstand"
     },
-    bias: "right"
+    bias: "center-right"
+  },
+  {
+    id: 4,
+    source: "jungefreiheit.de",
+    url: "https://www.jungefreiheit.de",
+    date: "27 May 2025",
+    headline: {
+      en: "Right-wing party calls for stricter border laws",
+      de: "Rechtspartei fordert strengere Grenzgesetze"
+    },
+    bias: "far-right"
   }
 ];

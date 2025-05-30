@@ -10,10 +10,12 @@ app.use(cors());
 app.use(express.static('public'));
 
 const sources = [
-  { url: 'https://www.tagesschau.de/xml/rss2', bias: 'center' },
-  { url: 'https://taz.de/rss.xml', bias: 'left' },
-  { url: 'https://www.welt.de/feeds/section/politik.rss', bias: 'right' }
+  { url: 'https://www.tagesschau.de/xml/rss2', bias: 'center-left' },
+  { url: 'https://taz.de/rss.xml', bias: 'far-left' },
+  { url: 'https://www.welt.de/feeds/section/politik.rss', bias: 'center-right' },
+  { url: 'https://www.jungefreiheit.de/feed/', bias: 'far-right' }
 ];
+
 
 app.get('/api/news', async (req, res) => {
   const results = [];
