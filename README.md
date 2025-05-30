@@ -28,5 +28,5 @@ CapyCapyNews is a lightweight news analysis tool that fetches headlines from Ger
 ## 🛠️ Setup
 
 1. Clone the repo  
-   ```bash
+   ```bash  
    git clone https://github.com/VasifVahidov/CapyCapyNews.git
