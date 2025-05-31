@@ -1,17 +1,14 @@
 const express = require('express');
 const Parser = require('rss-parser');
-const path = require('path');
 const cors = require('cors');
+const fetch = require('node-fetch');
 
 const app = express();
 const parser = new Parser();
 
 app.use(cors());
+app.use(express.json());
 
-// Serve static files from the 'public' directory
-app.use(express.static(path.join(__dirname, '..', 'public')));
-
-// RSS Feeds with bias metadata
 const feeds = [
   { url: 'https://www.tagesschau.de/xml/rss2', source: 'tagesschau.de', bias: 'center-left' },
   { url: 'https://www.taz.de/rss.xml', source: 'taz.de', bias: 'far-left' },
@@ -19,25 +16,42 @@ const feeds = [
   { url: 'https://jungefreiheit.de/feed/', source: 'jungefreiheit.de', bias: 'far-right' }
 ];
 
-// API route to serve articles
+async function translateText(text, sourceLang = 'de', targetLang = 'en') {
+  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sourceLang}&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Translation API error: ${res.status}`);
+    const data = await res.json();
+    return data[0]?.[0]?.[0] || text;
+  } catch (err) {
+    console.error("Translation error:", err);
+    return text;
+  }
+}
+
 app.get('/api/articles', async (req, res) => {
   const allArticles = [];
 
   for (const feed of feeds) {
     try {
       const parsed = await parser.parseURL(feed.url);
-      parsed.items.slice(0, 3).forEach(item => {
+      const items = parsed.items.slice(0, 3);
+
+      for (const item of items) {
+        const originalTitle = item.title;
+        const translatedTitle = await translateText(originalTitle, 'de', 'en');
+
         allArticles.push({
           source: feed.source,
           url: item.link,
           date: item.pubDate || 'Unknown',
           headline: {
-            en: item.title,
-            de: item.title // placeholder for translation
+            de: originalTitle,
+            en: translatedTitle
           },
           bias: feed.bias
         });
-      });
+      }
     } catch (err) {
       console.error(`Failed to fetch from ${feed.url}:`, err.message);
     }
@@ -46,13 +60,7 @@ app.get('/api/articles', async (req, res) => {
   res.json(allArticles);
 });
 
-// Catch-all route to support client-side routing (e.g., React, Vue)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
-});
-
-// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`CapyCapyNews backend running on http://localhost:${PORT}`);
+  console.log(`✅ CapyCapyNews backend running at http://localhost:${PORT}`);
 });
