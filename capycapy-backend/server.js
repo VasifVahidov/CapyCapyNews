@@ -12,7 +12,7 @@ app.use(express.json());
 const feeds = [
   { url: 'https://www.tagesschau.de/xml/rss2', source: 'tagesschau.de', bias: 'center-left' },
   { url: 'https://www.taz.de/rss.xml', source: 'taz.de', bias: 'far-left' },
-  { url: 'https://www.welt.de/feeds/section/nachrichten.rss', source: 'welt.de', bias: 'center-right' },
+  { url: 'https://www.faz.net/rss/aktuell', source: 'faz.net', bias: 'center-right' },
   { url: 'https://jungefreiheit.de/feed/', source: 'jungefreiheit.de', bias: 'far-right' }
 ];
 
